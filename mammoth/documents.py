@@ -95,6 +95,14 @@ column_break = Break("column")
 
 
 @cobble.data
+class Pagebreak(Element):
+    pass
+
+
+pagebreak = Pagebreak()
+
+
+@cobble.data
 class Tab(Element):
     pass
 

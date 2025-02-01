@@ -16,7 +16,8 @@ def convert_document_element_to_html(element,
         convert_image=None,
         id_prefix=None,
         output_format=None,
-        ignore_empty_paragraphs=True):
+        ignore_empty_paragraphs=True,
+        include_pagebreaks=False):
 
     if style_map is None:
         style_map = []
@@ -42,6 +43,7 @@ def convert_document_element_to_html(element,
         convert_image=convert_image,
         id_prefix=id_prefix,
         ignore_empty_paragraphs=ignore_empty_paragraphs,
+        include_pagebreaks=include_pagebreaks,
         note_references=[],
         comments=comments,
     )
@@ -62,11 +64,12 @@ class _ConversionContext(object):
 
 
 class _DocumentConverter(documents.element_visitor(args=1)):
-    def __init__(self, messages, style_map, convert_image, id_prefix, ignore_empty_paragraphs, note_references, comments):
+    def __init__(self, messages, style_map, convert_image, id_prefix, ignore_empty_paragraphs, include_pagebreaks, note_references, comments):
         self._messages = messages
         self._style_map = style_map
         self._id_prefix = id_prefix
         self._ignore_empty_paragraphs = ignore_empty_paragraphs
+        self._include_pagebreaks = include_pagebreaks
         self._note_references = note_references
         self._referenced_comments = []
         self._convert_image = convert_image
@@ -235,6 +238,11 @@ class _DocumentConverter(documents.element_visitor(args=1)):
     def visit_break(self, break_, context):
         return self._find_html_path_for_break(break_).wrap(lambda: [])
 
+    def visit_pagebreak(self, pagebreak, context):
+        if self._include_pagebreaks:
+            return [html.element("span", {"class": "pagebreak"}, [])]
+        else:
+            return []
 
     def _find_html_path_for_break(self, break_):
         style = self._find_style(break_, "break")

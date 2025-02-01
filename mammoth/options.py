@@ -6,6 +6,7 @@ def read_options(options):
     custom_style_map_text = options.pop("style_map", "") or ""
     embedded_style_map_text = options.pop("embedded_style_map", "") or ""
     include_default_style_map = options.pop("include_default_style_map", True)
+    include_pagebreaks = options.pop("include_pagebreaks", False)
     
     read_style_map_result = results.combine([
         _read_style_map(custom_style_map_text),
@@ -20,6 +21,7 @@ def read_options(options):
     
     options["ignore_empty_paragraphs"] = options.get("ignore_empty_paragraphs", True)
     options["style_map"] = style_map
+    options["include_pagebreaks"] = include_pagebreaks
     return read_style_map_result.map(lambda _: options)
 
 

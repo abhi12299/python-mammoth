@@ -46,10 +46,13 @@ class StripEmpty(NodeVisitor):
     
     def visit_element(self, element):
         children = strip_empty(element.children)
-        if len(children) == 0 and not element.is_void():
+        if len(children) == 0 and not element.is_void() and not self._is_pagebreak_element(element):
             return []
         else:
             return [Element(element.tag, children)]
+    
+    def _is_pagebreak_element(self, element):
+        return element.tag_names == ["span"] and "pagebreak" in element.attributes.get("class", "")
     
     def visit_force_write(self, node):
         return [node]

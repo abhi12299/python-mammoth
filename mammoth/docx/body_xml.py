@@ -65,7 +65,7 @@ def _create_reader(numbering, content_types, relationships, styles, docx_file, f
         "w:bookmarkEnd",
         "w:sectPr",
         "w:proofErr",
-        "w:lastRenderedPageBreak",
+        # "w:lastRenderedPageBreak",
         "w:commentRangeStart",
         "w:commentRangeEnd",
         "w:del",
@@ -480,6 +480,8 @@ def _create_reader(numbering, content_types, relationships, styles, docx_file, f
             warning = results.warning("Unsupported break type: {0}".format(break_type))
             return _empty_result_with_message(warning)
 
+    def pagebreak_(element):
+        return _success(documents.pagebreak)
 
     def inline(element):
         properties = element.find_child_or_null("wp:docPr").attributes
@@ -618,7 +620,8 @@ def _create_reader(numbering, content_types, relationships, styles, docx_file, f
         "w:endnoteReference": note_reference_reader("endnote"),
         "w:commentReference": read_comment_reference,
         "mc:AlternateContent": alternate_content,
-        "w:sdt": read_sdt
+        "w:sdt": read_sdt,
+        "w:lastRenderedPageBreak": pagebreak_,
     }
 
     def read(element):

@@ -138,6 +138,18 @@ with open("document.docx", "rb") as docx_file:
     messages = result.messages # Any messages
 ```
 
+#### Page breaks (tests not written yet)
+
+By default, page breaks are not included in the output HTML.
+To include page breaks in the output HTML, pass `include_pagebreaks=True` to `convert_to_html`. 
+
+*It uses the XML tag `w:lastRenderedPageBreak` to find page breaks - this may not be accurate as page information is not present in the docx file; rather, the rendering engine does its own calculations and inserts page breaks. Use with caution.*
+
+```python
+result = mammoth.convert_to_html(docx_file, include_pagebreaks=True)
+```
+
+The pagebreaks will be represented as `<span class="pagebreak"></span>` elements in the output HTML (markdown not tested).
 
 #### Custom style map
 
